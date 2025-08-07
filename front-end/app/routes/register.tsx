@@ -7,6 +7,8 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
+import { Toaster } from "../components/ui/sonner";
+import { toast } from "sonner";
 
 export function meta() {
   return [
@@ -41,25 +43,25 @@ export default function Register() {
 
     // Validation
     if (!email || !username || !password || !confirmPassword) {
-      setError("Please fill in all fields");
+      toast.error("Please fill in all fields")
       setIsLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters")
       setIsLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match")
       setIsLoading(false);
       return;
     }
 
     if (username.length < 3) {
-      setError("Username must be at least 3 characters");
+      toast.error("Username must be at least 3 characters")
       setIsLoading(false);
       return;
     }
@@ -67,9 +69,10 @@ export default function Register() {
     try {
       await register(email, username, password);      // Navigation is handled in the register function
     } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.")
     } finally {
       setIsLoading(false);
+      toast.success("User Registered Successfully!")
     }
   };
 

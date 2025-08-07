@@ -10,7 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
 import { ScrollArea } from "../components/ui/scroll-area";
-
+import { toast } from "sonner";
+ 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Home - Todo App" },
@@ -38,7 +39,7 @@ function HomeContent() {
       const fetchedTodos = await todoService.getAllTodos();
       setTodos(fetchedTodos);
     } catch (err: any) {
-      setError(err.message || "Failed to load todos");
+      toast.error("Failed to load todos");
     } finally {
       setLoading(false);
     }
@@ -54,9 +55,10 @@ function HomeContent() {
       setTodos([...todos, newTodo]);
       setNewTodoTitle("");
     } catch (err: any) {
-      setError(err.message || "Failed to create todo");
+      toast.error(err.message || "Failed to create todo");
     } finally {
       setIsAddingTodo(false);
+      toast.success("Task Added Successfully")
     }
   };
 
@@ -65,7 +67,7 @@ function HomeContent() {
       const updatedTodo = await todoService.toggleTodoStatus(todo.id, !todo.is_done);
       setTodos(todos.map(t => t.id === todo.id ? updatedTodo : t));
     } catch (err: any) {
-      setError(err.message || "Failed to update todo");
+      toast.error(err.message || "Failed to update todo");
     }
   };
 
@@ -74,7 +76,9 @@ function HomeContent() {
       await todoService.deleteTodo(id);
       setTodos(todos.filter(t => t.id !== id));
     } catch (err: any) {
-      setError(err.message || "Failed to delete todo");
+      toast.error(err.message || "Failed to delete todo");
+    }finally{
+      toast.success("Task Deleted Successfully")
     }
   };
 
@@ -87,7 +91,9 @@ function HomeContent() {
       setEditingTodo(null);
       setEditTitle("");
     } catch (err: any) {
-      setError(err.message || "Failed to update todo");
+      toast.error(err.message || "Failed to update todo");
+    }finally{
+      toast.success("Task Updated Successfully")
     }
   };
 

@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
+import { toast } from "sonner";
 
 export function meta() {
   return [
@@ -39,6 +40,7 @@ export default function Login() {
     // Simple validation
     if (!email || !password) {
       setError("Please fill in all fields");
+      toast.error("Please fill in all fields");
       setIsLoading(false);
       return;
     }
@@ -48,6 +50,11 @@ export default function Login() {
       // Navigation is handled in the login function
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
+      if (err.message === "User not found") {
+        toast.error("User not found");
+      } else {
+        toast.error(err.message || "Login failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -65,12 +72,6 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <Alert variant="destructive">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email address</label>
               <div className="relative">
@@ -116,15 +117,6 @@ export default function Login() {
                 >
                   {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
                 </Button>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600" />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">Remember me</label>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
               </div>
             </div>
             <div>
